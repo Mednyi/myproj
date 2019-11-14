@@ -10,3 +10,5 @@ git add <[file/folder name] [.]>
 git commit -am "<commit message>"
 # Положить изменения в удаленный репозиторий
 git push <имя ветки>
+# Обновить информацию о удаленном репозитории
+git fetch

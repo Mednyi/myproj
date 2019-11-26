@@ -1,6 +1,15 @@
 const io = require('socket.io')()
+const auth = require('../modules/auth')
 // namespace definition
 const myspace = io.of('/custom')
+myspace.use((socket, next) => {
+  try {
+    auth.checkAuth(socket.handshake.query.token, socket.handshake.query.user)
+  } catch (e) {
+    socket.disconnect(true)
+  }
+  next()
+})
 myspace.on('connection', socket => {
   console.log("connected")
   socket.on("message", msg => {

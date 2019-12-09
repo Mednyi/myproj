@@ -7,6 +7,22 @@
 var app = require('../app');
 var debug = require('debug')('expapp:server');
 var http = require('http');
+const mongo = require('../modules/mongo')
+let users = require('../models/users')
+/**
+ * Initialize DB
+ */
+;(async function() {
+try {
+  await mongo.addUsers(users)
+  let users1 = await mongo.findUsers()
+  console.log(users1)
+  await mongo.updateUser({_id: users1[0]._id},{name: "XXXX"})
+  await mongo.removeUser({_id: users1[1]._id})
+} catch (e) {
+  console.log(e)
+}
+})()
 
 /**
  * Get port from environment and store in Express.

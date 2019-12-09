@@ -1,7 +1,22 @@
 const io = require('socket.io')()
 const auth = require('../modules/auth')
+let users = require('../models/users')
 // namespace definition
-const myspace = io.of('/custom')
+io.on('connection', socket => {
+  socket.on('auth', (message) => {   
+    try{
+      let tokens = auth.authorize(message.name, message.password)
+      console.log(JSON.stringify(tokens))
+      socket.emit('authenticated',JSON.stringify(tokens))
+    } catch (e) {
+      socket.emit('authenticated',JSON.stringify({
+        code: 404,
+        msg: "Unauthorized"
+      }))
+    }
+  })
+})
+const myspace = io.of('/protected')
 myspace.use((socket, next) => {
   try {
     auth.checkAuth(socket.handshake.query.token, socket.handshake.query.user)
@@ -12,6 +27,10 @@ myspace.use((socket, next) => {
 })
 myspace.on('connection', socket => {
   console.log("connected")
+  socket.on("getUsers", msg => {
+    console.log(JSON.stringify(users))
+    socket.emit('users',JSON.stringify(users))
+  })
   socket.on("message", msg => {
     console.log(msg)
     socket.broadcast.emit("message", msg)
@@ -21,7 +40,7 @@ myspace.on('connection', socket => {
     socket.join(`${room}`)
     io.to("chat").emit("message", "Hi all")
     socket.to('chat').emit('message', "let's play a game")
-    io.of('/custom').to('chat').emit('message', 'message')
+    io.of('/protected').to('chat').emit('message', 'message')
   })
   socket.on("disconnect", () => {
     console.log("user disconnected")

@@ -1,0 +1,33 @@
+POST http://localhost:3001/users/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "username2",
+    "password": "123456"
+}
+
+###
+
+POST http://localhost:3001/users/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "username2",
+    "password": "123456"
+}
+
+###
+
+GET http://localhost:3001/users/ HTTP/1.1
+
+###
+
+PUT http://localhost:3001/users/5df13d8f9febb37b0cd8db2e HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVkZjEzZDhmOWZlYmIzN2IwY2Q4ZGIyZSIsImlhdCI6MTU3NjA5MjMxMSwidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiNDE1MzkxZjAtNjA3Yy00OTQ2LWEzN2EtYjQzNjFjNzk5YzQxIiwiZXhwIjoxNTc2MDkyNDMxfQ.DEfoBsXv1zUW4RQOde1Z7d-p5PGGRPEWWfJ5TGDPD9o
+
+{
+    "name": "username24"
+}
+
+###

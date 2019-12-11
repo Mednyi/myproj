@@ -1,12 +1,12 @@
 const uuid = require('uuid')
 const jose = require('jose')
-let users = require('../models/users')
+let mongo = require('./mongo')
 const {
   JWK,   // JSON Web Key (JWK)
   JWT
 } = jose
 const key = JWK.asKey("HelloMyLilFriend")
-const createToken = (id, ttype) => JWT.sign({
+const createToken = async (id, ttype) => JWT.sign({
         iss: "ImCoder",
         sub: 'Auth',
         aud: id,
@@ -24,29 +24,29 @@ const createToken = (id, ttype) => JWT.sign({
         algorithm: "HS256"
     }
 )
-const checkAuth = (token, id) => {
-    const user = users.find(item => item.id === id)
-    if(!user) throw new Error('no user')
+const checkAuth = async (token, id) => {
     try {
-      JWT.verify(token, key, {
-        algorithms: ["HS256"],
-        issuer: "ImCoder",
-        subject: "Auth",
-        audience: id
-      })
+      const user = await mongo.findUsers({_id: id})
+      if(!user[0]) throw new Error('no user')
+        JWT.verify(token, key, {
+          algorithms: ["HS256"],
+          issuer: "ImCoder",
+          subject: "Auth",
+          audience: id
+        })
     } catch (e) {
       console.log(e.message)
       throw new Error("Unauthorized") 
     }  
 }
-const authorize = (name, password) => {
-    const user = users.find(item => item.name === name)
-    if(user && user.password === password) {
-      const token = createToken(user.id, 'access')
-      const refresh = createToken(user.id, 'refresh')
+const authorize = async (name, password) => {
+    try {
+      const users = await mongo.findUsers({name, password})
+      const token = await createToken(users[0]._id.toString(), 'access')
+      const refresh = await createToken(users[0]._id.toString(), 'refresh')
       return {token, refresh}
-    } else {
-      throw new Error("Unauthorized")
+    } catch (e) {
+      throw e
     }
 }
 module.exports = {

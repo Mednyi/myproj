@@ -14,10 +14,10 @@ const connectDB = async () => {
        }
     }
 }
-const addUser = async(user) => {
+const addOne = async(entity, col_name) => {
     try {
         await connectDB()
-        const result = await db.collection("users").insertOne(user, {
+        const result = await db.collection(col_name).insertOne(entity, {
             w: "majority",
             wtimeout: 10000,
             serializeFunctions: false,
@@ -30,10 +30,10 @@ const addUser = async(user) => {
         throw new Error("Insert operation is not successfull")
     }
 }
-const addUsers = async(users) => {
+const addMany = async(entitys, col_name) => {
     try {
         await connectDB()
-        const result = await db.collection("users").insertMany(users, {
+        const result = await db.collection(col_name).insertMany(entitys, {
             ordered: true
         })
         console.log(JSON.stringify(result))
@@ -43,13 +43,13 @@ const addUsers = async(users) => {
     }
 }
 
-const updateUser = async(query,update) => {
+const updateOne = async(query, update, col_name) => {
     try {
         await connectDB()
         if(query._id) {
             query._id = new ObjectId(query._id)
         }
-        const result = await db.collection("users").updateOne(query, {$set: update}, {
+        const result = await db.collection(col_name).updateOne(query, {$set: update}, {
             upsert: false
         }) // findOneAndUpdate({id: user._d},user)
         console.log(JSON.stringify(result))
@@ -59,13 +59,13 @@ const updateUser = async(query,update) => {
     }
 }
 
-const updateUsers = async(query,update) => {
+const updateMany = async(query, update, col_name) => {
     try {
         await connectDB()
         if(query._id) {
             query._id = new ObjectId(query._id)
         }
-        const result = await db.collection("users").updateMany(query, {$set: update}) 
+        const result = await db.collection(col_name).updateMany(query, {$set: update}) 
         console.log(JSON.stringify(result))
         return result  
     } catch (e) {
@@ -73,13 +73,13 @@ const updateUsers = async(query,update) => {
     }
 }
 
-const removeUser = async (query) => {
+const removeOne = async (query, col_name) => {
     try {
         await connectDB()
         if(query._id) {
             query._id = new ObjectId(query._id)
         }
-        const result = await db.collection("users").deleteOne(query) 
+        const result = await db.collection(col_name).deleteOne(query) 
         console.log(JSON.stringify(result)) 
         return result         
     } catch (e) {
@@ -87,13 +87,13 @@ const removeUser = async (query) => {
     }
 }
 
-const removeUsers = async (query) => {
+const removeMany = async (query, col_name) => {
     try {
         await connectDB()
         if(query._id) {
             query._id = new ObjectId(query._id)
         }
-        const result = await db.collection("users").deleteOne(query) 
+        const result = await db.collection(col_name).deleteOne(query) 
         console.log(JSON.stringify(result))  
         return result        
     } catch (e) {
@@ -101,13 +101,13 @@ const removeUsers = async (query) => {
     }
 }
 
-const findUsers = async (query) => {
+const findEntities = async (query, col_name) => {
     try {
         await connectDB()
-        if(query._id) {
+        if(query._id && typeof query._id === 'string') {
             query._id = new ObjectId(query._id)
         }
-        const result = await db.collection("users").find(query, {
+        const result = await db.collection(col_name).find(query, {
             limit: 20
             // projection: {'name': 1, 'surname': 1},
             // skip: 20,
@@ -121,11 +121,11 @@ const findUsers = async (query) => {
 } 
 
 module.exports = {
-    addUser,
-    addUsers,
-    removeUser,
-    removeUsers,
-    updateUser,
-    updateUsers,
-    findUsers
+    addOne,
+    addMany,
+    removeOne,
+    removeMany,
+    updateOne,
+    updateMany,
+    findEntities
 }

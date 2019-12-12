@@ -24,10 +24,41 @@ GET http://localhost:3001/users/ HTTP/1.1
 
 PUT http://localhost:3001/users/5df13d8f9febb37b0cd8db2e HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVkZjEzZDhmOWZlYmIzN2IwY2Q4ZGIyZSIsImlhdCI6MTU3NjA5MjMxMSwidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiNDE1MzkxZjAtNjA3Yy00OTQ2LWEzN2EtYjQzNjFjNzk5YzQxIiwiZXhwIjoxNTc2MDkyNDMxfQ.DEfoBsXv1zUW4RQOde1Z7d-p5PGGRPEWWfJ5TGDPD9o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVkZjI5MDM3M2ZmMjhhZDEzODcwZDU3ZCIsImlhdCI6MTU3NjE4MDMzNiwidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiMTk1MmZlY2MtOWVlMS00ZDUxLWJjNzMtZmU1YzI4NWMwODVkIiwiZXhwIjoxNTc2MTgzMzM2fQ.dos6e6bM6rIY_M79WKOuJB_Qp-AEvuApdS_Tv6Hrwew
 
 {
     "name": "username24"
 }
+
+###
+
+POST http://localhost:3001/films HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Good Film",
+    "tags": ["horror", "comedy"]
+}
+
+###
+
+POST http://localhost:3001/users/5df290373ff28ad13870d57d/films HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVkZjI5MDM3M2ZmMjhhZDEzODcwZDU3ZCIsImlhdCI6MTU3NjE4MTE2OCwidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiZWQ0NDcyMWUtZjdkMS00MjNkLTk3ZjAtOGFiZWQzZWNiODU4IiwiZXhwIjoxNTc2MTg0MTY4fQ.dfBZrS9HNz0b-E7jBsKngGj26DxodvHDGCn87hEWC3I
+
+{
+    "_id": "5df291313ff28ad13870d57e"
+}
+
+###
+
+GET http://localhost:3001/users/5df290373ff28ad13870d57d/films HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVkZjI5MDM3M2ZmMjhhZDEzODcwZDU3ZCIsImlhdCI6MTU3NjE4MTczMiwidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiZjM1MGE0M2MtNmRjNS00YTE4LThiZTUtMzU1NzJhMDc2MDRhIiwiZXhwIjoxNTc2MTg0NzMyfQ.4WmN978ncmoNHbUPFqTMoM3ZX60w7mX3OnHF8xIn1_U
+
+###
+
+DELETE http://localhost:3001/films/5df291313ff28ad13870d57e HTTP/1.1
+content-type: application/json
 
 ###

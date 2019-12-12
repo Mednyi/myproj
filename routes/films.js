@@ -1,34 +1,55 @@
 var express = require('express');
 var router = express.Router();
-const uuid = require('uuid')
-let films = require('../models/films')
+const mongo = require('../modules/mongo')
 /* GET films listing. */
-router.get('/', function(req, res, next) {
-  res.send(films);
-});
-router.post('/', (req,res,next) => {
-  let film = {
-    id: uuid(),
-    title: req.body.title,
-    tags: req.body.tags
+const col_name = 'films'
+router.get('/', async function(req, res, next) {
+  try {
+    const films = await mongo.findEntities({}, col_name)
+    res.send(films)
+  } catch (e) {
+    res.status(500).send(e.message)
   }
-  films.push(film)
-  res.send(film)
+});
+router.post('/', async (req,res,next) => {
+  try {
+    let film = {
+      title: req.body.title,
+      tags: req.body.tags
+    }
+    film = await mongo.addOne(film, col_name)
+    res.send(film)
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
+  
 })
-router.delete('/:id', (req,res,next) => {
-  films = films.filter(film => film.id !== req.params.id)
-  res.redirect("/").send("film deleted")
+router.delete('/:_id', async (req,res,next) => {
+  try {
+    await mongo.removeOne({_id : req.params._id}, col_name)
+    res.send("film deleted")
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
 })
-router.put('/:id', (req,res,next) => {
-  let updated = req.body
-  updated = req.params.id
-  films = films.filter(film => film.id !== req.params.id)
-  films.push(updated)
+router.put('/:_id', async (req,res,next) => {
+  try {
+    let updated = req.body
+    const result = await mongo.updateOne({_id: req.params._id}, col_name)
+    res.send(updated)
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
+  
   res.send(updated)
 })
-router.get('/:id', function(req, res, next) {
-  const film = films.find(item => item.id === req.params.id)
-  res.send(JSON.stringify(film));
-  next()
+router.get('/:_id', async function(req, res, next) {
+  try {
+    const result = await mongo.findEntities({_id: req.params_id}, col_name)
+    res.send(JSON.stringify(result[0]));
+    next()
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
 });
 module.exports = router;

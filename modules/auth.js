@@ -20,13 +20,13 @@ const createToken = async (id, ttype) => JWT.sign({
       },
       key, 
       {
-        expiresIn: ttype === 'access' ? '2m' : '10m',
+        expiresIn: ttype === 'access' ? '50m' : '10m',
         algorithm: "HS256"
     }
 )
 const checkAuth = async (token, id) => {
     try {
-      const user = await mongo.findUsers({_id: id})
+      const user = await mongo.findEntities({_id: id}, 'users')
       if(!user[0]) throw new Error('no user')
         JWT.verify(token, key, {
           algorithms: ["HS256"],
@@ -41,7 +41,7 @@ const checkAuth = async (token, id) => {
 }
 const authorize = async (name, password) => {
     try {
-      const users = await mongo.findUsers({name, password})
+      const users = await mongo.findEntities({name, password}, 'users')
       const token = await createToken(users[0]._id.toString(), 'access')
       const refresh = await createToken(users[0]._id.toString(), 'refresh')
       return {token, refresh}

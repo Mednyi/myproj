@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const uuid = require('uuid')
-let users = require('../models/users')
-let films = require('../models/films')
 const auth = require('../modules/auth')
 let mongo = require('../modules/mongo')
+const ObjectId = require('mongodb').ObjectID;
 /* GET users listing. */
+const col_name = 'users'
+const col_films = 'films'
 router.post('/login', async function(req, res, next) {
   try{
     let tokens = await auth.authorize(req.body.name, req.body.password)
@@ -31,7 +31,7 @@ router.post('/:_id/refresh', async function(req, res, next) {
 });
 router.get('/', async function(req, res, next) {
   try {
-    const users = await mongo.findUsers({})
+    const users = await mongo.findEntities({}, col_name)
     res.send(users);
   } catch (e) {
     res.status(500).send(e.message)
@@ -43,7 +43,7 @@ router.post('/', async (req,res,next) => {
       name: req.body.name,
       password: req.body.password
     }
-    user = await mongo.addUser(user)
+    user = await mongo.addOne(user, col_name)
     res.send(user)
   } catch (e) {
     res.status(500).send(e.message)
@@ -51,7 +51,7 @@ router.post('/', async (req,res,next) => {
 })
 router.delete('/:_id', async (req,res,next) => {
   try {
-    await mongo.removeUser({_id: req.params._id})
+    await mongo.removeOne({_id: req.params._id}, col_name)
     res.redirect("/").send("User deleted")
   } catch (e) {
     res.status(500).send(e.message)
@@ -60,7 +60,7 @@ router.delete('/:_id', async (req,res,next) => {
 router.put('/:_id', async (req,res,next) => {
   try {
     let updated = req.body
-    await mongo.updateUser({_id: req.params._id}, updated)
+    await mongo.updateOne({_id: req.params._id}, updated, col_name)
     res.send(updated)
   } catch (e) {
     res.status(500).send(e.message)
@@ -68,15 +68,31 @@ router.put('/:_id', async (req,res,next) => {
 })
 
 
-router.post('/:id/films', (req,res) => {
-  let bought = films.find(film => film.id===req.body.film)
-  let buyer = users.find(user => user.id === req.params.id)
-  buyer.films || (buyer.films = [])
-  buyer.films.push(bought)
+router.post('/:_id/films', async (req,res) => {
+  try {
+    const users = await mongo.findEntities({_id: req.params._id}, col_name)
+    users[0].films || (users[0].films = [])
+    users[0].films.push(req.body._id)
+    const result = await mongo.updateOne({_id: req.params._id}, users[0], col_name)
+    res.send(users[0])
+  } catch {
+    res.status(500).send(e.message)
+  }
 })
+
+router.get('/:_id/films', async (req,res) => {
+  try {
+    let users = await mongo.findEntities({_id: req.params._id}, col_name)
+    const films = await mongo.findEntities({_id: {$in: users[0].films.map(id => new ObjectId(id))}}, col_films)
+    res.send(films)
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
+})
+
 router.get('/:_id', async function(req, res, next) {
   try {
-    const user = await mongo.findUsers({_id: req.params._id})[0]
+    const user = await mongo.findEntities({_id: req.params._id}, col_name)[0]
     res.send(JSON.stringify(user));
     next()
   } catch (e) {

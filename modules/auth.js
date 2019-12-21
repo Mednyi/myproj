@@ -42,8 +42,8 @@ const checkAuth = async (token, id) => {
 const authorize = async (name, password) => {
     try {
       const users = await mongo.findEntities({name, password}, 'users')
-      const token = await createToken(users[0]._id.toString(), 'access')
-      const refresh = await createToken(users[0]._id.toString(), 'refresh')
+      const token = await createToken(users[0].value._id.toString(), 'access')
+      const refresh = await createToken(users[0].value._id.toString(), 'refresh')
       return {token, refresh}
     } catch (e) {
       throw e

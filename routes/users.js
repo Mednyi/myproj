@@ -51,8 +51,8 @@ router.post('/', async (req,res,next) => {
 })
 router.delete('/:_id', async (req,res,next) => {
   try {
-    await mongo.removeOne({_id: req.params._id}, col_name)
-    res.redirect("/").send("User deleted")
+    let result = await mongo.removeOne({_id: req.params._id}, col_name)
+    res.send(result)
   } catch (e) {
     res.status(500).send(e.message)
   }
@@ -60,7 +60,7 @@ router.delete('/:_id', async (req,res,next) => {
 router.put('/:_id', async (req,res,next) => {
   try {
     let updated = req.body
-    await mongo.updateOne({_id: req.params._id}, updated, col_name)
+    updated = await mongo.updateOne({_id: req.params._id}, updated, col_name)
     res.send(updated)
   } catch (e) {
     res.status(500).send(e.message)
@@ -71,10 +71,10 @@ router.put('/:_id', async (req,res,next) => {
 router.post('/:_id/films', async (req,res) => {
   try {
     const users = await mongo.findEntities({_id: req.params._id}, col_name)
-    users[0].films || (users[0].films = [])
-    users[0].films.push(req.body._id)
-    const result = await mongo.updateOne({_id: req.params._id}, users[0], col_name)
-    res.send(users[0])
+    users[0].value.films || (users[0].value.films = [])
+    users[0].value.films.push(req.body._id)
+    const result = await mongo.updateOne({_id: req.params._id}, users[0].value, col_name)
+    res.send(result)
   } catch {
     res.status(500).send(e.message)
   }
@@ -83,7 +83,7 @@ router.post('/:_id/films', async (req,res) => {
 router.get('/:_id/films', async (req,res) => {
   try {
     let users = await mongo.findEntities({_id: req.params._id}, col_name)
-    const films = await mongo.findEntities({_id: {$in: users[0].films.map(id => new ObjectId(id))}}, col_films)
+    const films = await mongo.findEntities({_id: {$in: users[0].value.films.map(id => new ObjectId(id))}}, col_films)
     res.send(films)
   } catch (e) {
     res.status(500).send(e.message)

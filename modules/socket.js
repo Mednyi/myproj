@@ -1,7 +1,8 @@
 const io = require('socket.io')()
 const auth = require('../modules/auth')
 let users = require('../models/users')
-// namespace definition
+const mongodb = require('../modules/mongo')
+mongodb.initStream(io)
 io.on('connection', socket => {
   socket.on('auth', (message) => {   
     try{
@@ -17,24 +18,27 @@ io.on('connection', socket => {
   })
 })
 const myspace = io.of('/protected')
-myspace.use((socket, next) => {
+/* myspace.use((socket, next) => {
   try {
     auth.checkAuth(socket.handshake.query.token, socket.handshake.query.user)
   } catch (e) {
     socket.disconnect(true)
   }
   next()
-})
+}) */
 myspace.on('connection', socket => {
   console.log("connected")
   socket.on("getUsers", msg => {
+    mongodb.findEntities({},'users')
     console.log(JSON.stringify(users))
     socket.emit('users',JSON.stringify(users))
   })
   socket.on("message", msg => {
-    console.log(msg)
-    socket.broadcast.emit("message", msg)
-    io.emit("message", msg)
+    switch (msg.op) {
+      case 'add': 
+        mongodb.addOne(msg.value, msg.col_name) 
+        break;
+    }
   })
   socket.on("room", room => {
     socket.join(`${room}`)

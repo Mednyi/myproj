@@ -5,50 +5,14 @@ const assert = require('assert');
 const uri = `mongodb+srv://ordinary:D1fOmvXwRBG8MRw9@cluster0-gaj0e.mongodb.net/test?retryWrites=true&w=majority`;
 const rfc6902 = require('rfc6902')
 const client = new MongoClient(uri, { useNewUrlParser: true });
-let db
-const connectDB = async () => {
-    if(!client.isConnected()) {
-       try{ 
-           const connection =  await client.connect()
-           db = connection.db("Access")
-           const changeStream = db.watch()
-           const next = await changeStream.next() 
-           var users = [{first: 'Chris', last: 'Brown', age: 20}];
-           rfc6902.applyPatch(users, [
-             {op: 'replace', path: '/0/age', value: 21},
-             {op: 'add', path: '/-', value: {first: 'Raphael', age: 37}},
-           ]);
-           console.log(users)
-           console.log(next)
-       } catch (e) {
-           console.log(e.message)
-       }
-    }
-}
-const constructPatch = (op, docs) => {
-    if(op === 'remove') {
-        return [{
-            op,
-            path: '/' + docs[0]._id
-        }]
-    }
-    var patch = docs.map(doc => {
-      return {
-        op,
-        path: '/' + doc._id,
-        value: doc
-      }
-    })
-    return patch
-  }
-/*   var streamOpsMAp = {
+var streamOpsMAp = {
     insert: 'add',
     delete: 'remove',
     update: 'add',
     replace: 'add'
-  } */
-  
-/*   const constructStreamPatch = data => {
+}
+let changeStream
+const constructStreamPatch = data => {
     var path =  '/' + data.documentKey._id
     var op = streamOpsMAp[data.operationType]
     var value
@@ -73,7 +37,46 @@ const constructPatch = (op, docs) => {
       type: data.ns.coll,
       patch
     }
-  } */  
+}
+const connectDB = async () => {
+    if(!client.isConnected()) {
+       try{ 
+           const connection =  await client.connect()
+           db = connection.db("Access")
+           changeStream = db.watch()
+       } catch (e) {
+           console.log(e.message)
+       }
+    }
+}
+const initStream = async (io) => {
+    try {
+        await connectDB()
+        changeStream.on('change', next => {
+           io.emit('message', constructStreamPatch(next))
+        })
+    } catch(e) {
+        throw e
+    }
+}
+
+const constructPatch = (op, docs) => {
+    if(op === 'remove') {
+        return [{
+            op,
+            path: '/' + docs[0]._id
+        }]
+    }
+    var patch = docs.map(doc => {
+      return {
+        op,
+        path: '/' + doc._id,
+        value: doc
+      }
+    })
+    return patch
+  }
+     
 const findEntities = async (query, col_name) => {
     try {
         await connectDB()
@@ -238,5 +241,9 @@ module.exports = {
     removeMany,
     updateOne,
     updateMany,
-    findEntities
+    findEntities,
+    changeStream,
+    connectDB,
+    constructStreamPatch,
+    initStream
 }

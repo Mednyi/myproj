@@ -2,8 +2,8 @@ POST http://localhost:3001/users/ HTTP/1.1
 content-type: application/json
 
 {
-    "name": "useree22344w4sdfsdf",
-    "password": "1234536sdfsdf"
+    "name": "use342342342",
+    "password": "12sdfsdfsdff"
 }
 
 ###
@@ -12,8 +12,8 @@ POST http://localhost:3001/users/login HTTP/1.1
 content-type: application/json
 
 {
-    "name": "username2",
-    "password": "123456"
+    "name": "use342342342",
+    "password": "12sdfsdfsdff"
 }
 
 ###

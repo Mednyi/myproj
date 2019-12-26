@@ -29,7 +29,7 @@ const myspace = io.of('/protected')
 myspace.on('connection', socket => {
   console.log("connected")
   socket.on("getUsers", msg => {
-    mongodb.findEntities({},'users')
+    mongodb.findAndGroup('name','users')
     console.log(JSON.stringify(users))
     socket.emit('users',JSON.stringify(users))
   })

@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('expapp:server');
 var http = require('http');
 
@@ -23,7 +23,7 @@ var server = http.createServer(app);
 
 // Socket -------------------------------------------------
 
-var io = require('../modules/socket')
+var io = require('./modules/socket')
 io.attach(server)
 
 //---------------------------------------------------------------

@@ -62,3 +62,7 @@ DELETE http://localhost:3001/films/5df291313ff28ad13870d57e HTTP/1.1
 content-type: application/json
 
 ###
+
+GET http://localhost:3001/users/5e01013823af627e80966707/client/ HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6IjRqdWFfNl9sQlBlelpvM0k4d3huTTVWalc3c3hYXzRzMUhIRDlHcERzZFkifQ.eyJpc3MiOiJJbUNvZGVyIiwic3ViIjoiQXV0aCIsImF1ZCI6IjVlMDEwMTM4MjNhZjYyN2U4MDk2NjcwNyIsImlhdCI6MTU3ODkzODI4NywidHR5cGUiOiJhY2Nlc3MiLCJoZWFkZXIiOnsidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifSwianRpIjoiZTI1NzEyYTktYmU0ZC00ZmMwLWE2MjItZGExZDAzMGQxZTZlIiwiZXhwIjoxNTc4OTQxMjg3fQ.v0J3n9Q0J9RyDLdtaM-Z2nnhK5Af_5i8s4lnimIOlMk

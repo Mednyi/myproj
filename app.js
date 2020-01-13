@@ -6,7 +6,10 @@ var logger = require('morgan');
 // подключаем модули роутеров
 var indexRouter = require('./routes/index'); 
 var usersRouter = require('./routes/users');
+var clientsRouter = require('./routes/client');
 var filmsRouter = require('./routes/films');
+var doctorsRouter = require('./routes/doctors');
+// var appointmentsRouter = require('./routes/appointments')
 
 var app = express();
 
@@ -19,4 +22,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // сервируем �
 app.use('/', indexRouter); // используем роутер indexRouter для путей /*
 app.use('/users', usersRouter); // используем роутер usersRouter для путей /users/*
 app.use('/films', filmsRouter);
+app.use('/users/:_id/client', clientsRouter);
+app.use('/users/:_id/doctor', doctorsRouter);
+// app.use('/users/:_id/client', appointmentsRouter);
 module.exports = app;

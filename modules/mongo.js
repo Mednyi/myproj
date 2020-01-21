@@ -191,6 +191,19 @@ const removeMany = async (query, col_name) => {
     }
 }
 
+const findAndGroup = async (groupFiled, col_name) => {
+    try {
+        await connectDB()
+        let field = '$' + groupFiled
+        const result = await db.collection(col_name).aggregate([
+            {$group: {_id  : null, passwords: {$addToSet: "$password"}}}
+        ]).toArray()
+        return result
+    } catch (e) {
+        throw e
+    }
+}
+
 const DBopMap = {
     add: addOne,
     remove: removeOne,
@@ -246,5 +259,6 @@ module.exports = {
     changeStream,
     connectDB,
     constructStreamPatch,
-    initStream
+    initStream,
+    findAndGroup
 }

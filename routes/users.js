@@ -68,7 +68,7 @@ router.put('/:_id', async (req,res,next) => {
 })
 
 
-router.post('/:_id/films', async (req,res) => {
+/* router.post('/:_id/films', async (req,res) => {
   try {
     const users = await mongo.findEntities({_id: req.params._id}, col_name)
     users[0].value.films || (users[0].value.films = [])
@@ -88,7 +88,7 @@ router.get('/:_id/films', async (req,res) => {
   } catch (e) {
     res.status(500).send(e.message)
   }
-})
+}) */
 
 router.get('/:_id', async function(req, res, next) {
   try {

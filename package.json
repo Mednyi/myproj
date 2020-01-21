@@ -2,9 +2,19 @@
   "name": "expapp",
   "version": "0.0.0",
   "private": true,
+  "main": "./bin/www",
+  "license": "MIT",
   "scripts": {
     "start": "node ./bin/www"
   },
+  "engines" : {
+    "node": "10.x"
+  },
+    "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",

@@ -1,7 +1,8 @@
 const io = require('socket.io')()
 const auth = require('../modules/auth')
 let users = require('../models/users')
-// namespace definition
+const mongodb = require('../modules/mongo')
+mongodb.initStream(io)
 io.on('connection', socket => {
   socket.on('auth', (message) => {   
     try{
@@ -28,13 +29,16 @@ myspace.use((socket, next) => {
 myspace.on('connection', socket => {
   console.log("connected")
   socket.on("getUsers", msg => {
+    mongodb.findAndGroup('name','users')
     console.log(JSON.stringify(users))
     socket.emit('users',JSON.stringify(users))
   })
   socket.on("message", msg => {
-    console.log(msg)
-    socket.broadcast.emit("message", msg)
-    io.emit("message", msg)
+    switch (msg.op) {
+      case 'add': 
+        mongodb.addOne(msg.value, msg.col_name) 
+        break;
+    }
   })
   socket.on("room", room => {
     socket.join(`${room}`)

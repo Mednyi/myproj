@@ -18,14 +18,14 @@ io.on('connection', socket => {
   })
 })
 const myspace = io.of('/protected')
-/* myspace.use((socket, next) => {
+myspace.use((socket, next) => {
   try {
     auth.checkAuth(socket.handshake.query.token, socket.handshake.query.user)
   } catch (e) {
     socket.disconnect(true)
   }
   next()
-}) */
+})
 myspace.on('connection', socket => {
   console.log("connected")
   socket.on("getUsers", msg => {

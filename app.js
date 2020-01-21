@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var clientsRouter = require('./routes/client');
 var filmsRouter = require('./routes/films');
 var doctorsRouter = require('./routes/doctors');
+var clinicsRouter = require('./routes/clinics');
 // var appointmentsRouter = require('./routes/appointments')
 
 var app = express();
@@ -24,5 +25,6 @@ app.use('/users', usersRouter); // используем роутер usersRouter
 app.use('/films', filmsRouter);
 app.use('/users/:_id/client', clientsRouter);
 app.use('/users/:_id/doctor', doctorsRouter);
+app.use('/clinics', clinicsRouter);
 // app.use('/users/:_id/client', appointmentsRouter);
 module.exports = app;

@@ -43,6 +43,7 @@ const connectDB = async () => {
        try{ 
            const connection =  await client.connect()
            db = connection.db("Access")
+           db.collection("clinics").createIndex( { location : "2dsphere" } )
            changeStream = db.watch()
        } catch (e) {
            console.log(e.message)

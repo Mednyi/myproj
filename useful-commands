@@ -1,0 +1,34 @@
+# Подключиться к серверу по адресу <адрес сервера> и войти под пользователем <имя пользователя>
+ssh <имя пользователя>@<адрес сервера>:<порт>
+
+# Запуск комманды от имени администратора 
+sudo <комманда>
+
+# Переключиться на администратора
+sudo -s 
+
+# Переключиться на пользователя <Имя пользователя>
+su <имя пользователя>
+
+# Посмотреть текущую директорию
+pwd
+
+-----------------------------------------------------------------------------------------
+
+Установка Docker
+
+apt - advanced packaging tool
+1. sudo apt-get update - обновить пакеты
+2. sudo apt-get remove docker docker-engine docker.io - удалить пакеты
+3. sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+4. curl -fsSL https://download.docker.com/linux/ubuntu/gpg - получить сертификат для возможности обращения к репозиторию
+5. sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable - использование stable релиза docker для нашей версии системы
+6. sudo apt-get update - обновить список репозиториев
+7. sudo apt-get install docker-ce docker-ce-cli containerd.io - установка docker community edition
+8. sudo docker run hello-world - запустить контейнер на базе образа hello-world
+9. sudo groupadd docker - создать группу пользователей с доступом к docker
+10. sudo usermod -aG ($USER или <имя пользователя>)
+11. newgrp docker
+12. sudo systemctl enable docker - запуск docker при запуске системы

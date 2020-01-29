@@ -32,3 +32,31 @@ apt - advanced packaging tool
 10. sudo usermod -aG ($USER или <имя пользователя>)
 11. newgrp docker
 12. sudo systemctl enable docker - запуск docker при запуске системы
+
+----------------------------------------------------------------------------------------------
+
+Первичная настройка Firewall
+
+1. sudo ufw status [verbose, numbered] - статус Uncomplicated firewall утилиты
+2. sudo ufw enable - включить UFW
+3. sudo ufw [allow, deny] <имя протокола> - Разрешить или запретить доступ по указанному протоколу
+4. sudo ufw deafult [deny, allow] [incoming, outgoing, routed] - Установить правила по-умолчанию для соединейний соответствующего направления
+5. sudo ufw [allow, deny] from <ip> [to any port <port>] - Разрешить\запретить указанному ip доступ к серверу по заданному порту
+6. sudo ufw delete <правило или номер правила>
+
+----------------------------------------------------------------------------------------------
+
+Настройка jenkins
+
+1. docker network create jenkins - Создать bridge сеть для докера
+2. docker volume create jenkins-docker-certs - Создать виртульный том докера для сертификатов Jenkins
+3. docker volume create jenkins-data
+4. docker container run --name jenkins-docker --rm --detach \
+  --privileged --network jenkins --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume "$HOME":/home \
+  --publish 3000:3000 docker:dind - Запуск контейнера с докером, который будет использован дженкинсом для исполнения команд докера
+5. docker container run --name myjenkins --rm --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume "$HOME":/home --publish 8080:8080 jenkinsci/blueocean
+

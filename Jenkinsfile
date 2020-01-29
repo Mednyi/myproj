@@ -6,7 +6,7 @@ node {
             def myImage = docker.build("clinics:latest", '.')
             sh 'docker stop clinics'
             sh 'docker rm clinics'
-            sh 'docker run -d --name clinics -p 3001:3001 clinics:latest' 
+            sh 'docker container run --rm --detach --name clinics --publish 3001:3001 clinics:latest' 
         } else {
             echo 'Another branches'
         }

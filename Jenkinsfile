@@ -19,7 +19,6 @@ pipeline {
                     branch 'dev'
                 }
                 steps {
-                    sh 'docker container stop clinics-dev'
                     sh 'docker container run --rm --detach --publish 3000:3001 --name clinics-dev clinics:latest'
                 }
             }

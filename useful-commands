@@ -1,0 +1,62 @@
+# Подключиться к серверу по адресу <адрес сервера> и войти под пользователем <имя пользователя>
+ssh <имя пользователя>@<адрес сервера>:<порт>
+
+# Запуск комманды от имени администратора 
+sudo <комманда>
+
+# Переключиться на администратора
+sudo -s 
+
+# Переключиться на пользователя <Имя пользователя>
+su <имя пользователя>
+
+# Посмотреть текущую директорию
+pwd
+
+-----------------------------------------------------------------------------------------
+
+Установка Docker
+
+apt - advanced packaging tool
+1. sudo apt-get update - обновить пакеты
+2. sudo apt-get remove docker docker-engine docker.io - удалить пакеты
+3. sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+4. curl -fsSL https://download.docker.com/linux/ubuntu/gpg - получить сертификат для возможности обращения к репозиторию
+5. sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable - использование stable релиза docker для нашей версии системы
+6. sudo apt-get update - обновить список репозиториев
+7. sudo apt-get install docker-ce docker-ce-cli containerd.io - установка docker community edition
+8. sudo docker run hello-world - запустить контейнер на базе образа hello-world
+9. sudo groupadd docker - создать группу пользователей с доступом к docker
+10. sudo usermod -aG ($USER или <имя пользователя>)
+11. newgrp docker
+12. sudo systemctl enable docker - запуск docker при запуске системы
+
+----------------------------------------------------------------------------------------------
+
+Первичная настройка Firewall
+
+1. sudo ufw status [verbose, numbered] - статус Uncomplicated firewall утилиты
+2. sudo ufw enable - включить UFW
+3. sudo ufw [allow, deny] <имя протокола> - Разрешить или запретить доступ по указанному протоколу
+4. sudo ufw deafult [deny, allow] [incoming, outgoing, routed] - Установить правила по-умолчанию для соединейний соответствующего направления
+5. sudo ufw [allow, deny] from <ip> [to any port <port>] - Разрешить\запретить указанному ip доступ к серверу по заданному порту
+6. sudo ufw delete <правило или номер правила>
+
+----------------------------------------------------------------------------------------------
+
+Настройка jenkins
+
+1. docker network create jenkins - Создать bridge сеть для докера
+2. docker volume create jenkins-docker-certs - Создать виртульный том докера для сертификатов Jenkins
+3. docker volume create jenkins-data
+4. docker container run --name jenkins-docker --rm --detach \
+  --privileged --network jenkins --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume "$HOME":/home \
+  --publish 3000:3000 docker:dind - Запуск контейнера с докером, который будет использован дженкинсом для исполнения команд докера
+5. docker container run --name myjenkins --rm --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume "$HOME":/home --publish 8080:8080 jenkinsci/blueocean
+

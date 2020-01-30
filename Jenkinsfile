@@ -4,10 +4,11 @@ pipeline {
             filename 'Dockerfile'
             label 'clinics:latest'
         }
-        environment {
-            CI = 'true'
-        }
-        stages {
+    }
+    environment {
+        CI = 'true'
+    }
+    stages {
             stage('Build') {
                 steps {
                     sh 'npm install'
@@ -35,5 +36,4 @@ pipeline {
                 }
             }
         }
-    }
 }

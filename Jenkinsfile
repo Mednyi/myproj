@@ -19,7 +19,8 @@ pipeline {
                     branch 'dev'
                 }
                 steps {
-                    sh 'docker container run --rm --detach --publish 3000:3001 --name clnics clinics:latest'
+                    sh 'docker container stop clinics-dev'
+                    sh 'docker container run --rm --detach --publish 3000:3001 --name clinics-dev clinics:latest'
                 }
             }
             stage('Deploy for Production') {
@@ -27,7 +28,8 @@ pipeline {
                     branch 'master'
                 }
                 steps {
-                    sh 'docker container run --rm --detach --publish 3001:3001 --name clnics clinics:latest'
+                    sh 'docker container stop clinics' 
+                    sh 'docker container run --rm --detach --publish 3001:3001 --name clinics clinics:latest'
                 }
             }
         }

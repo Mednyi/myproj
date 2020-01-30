@@ -1,16 +1,12 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-        }
-    }
+    agent any
     environment {
         CI = 'true'
     }
     stages {
             stage('Build') {
                 steps {
-                    sh 'npm install'
+                    sh 'docker build -t clinics:latest .'
                 }
             }
             stage('Test') {
@@ -23,7 +19,7 @@ pipeline {
                     branch 'dev'
                 }
                 steps {
-                    sh 'npm start'
+                    sh 'docker container run --rm --detach --publish 3000:3001 --name clnics clinics:latest'
                 }
             }
             stage('Deploy for Production') {
@@ -31,7 +27,7 @@ pipeline {
                     branch 'master'
                 }
                 steps {
-                    sh 'npm start'
+                    sh 'docker container run --rm --detach --publish 3001:3001 --name clnics clinics:latest'
                 }
             }
         }

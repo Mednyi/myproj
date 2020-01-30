@@ -13,7 +13,7 @@ WORKDIR /app
 RUN npm install
 
 # EXPOSE - какой порт сделать доступным
-EXPOSE 3001 8080
+EXPOSE 3001
 
 # CMD - какой командой запускать приложение
 CMD ["node", "./www"]

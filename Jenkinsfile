@@ -28,6 +28,7 @@ pipeline {
                     branch 'master'
                 }
                 steps { 
+                    sh 'docker container stop clinics'
                     sh 'docker container run --rm --detach --publish 3001:3001 --name clinics clinics:latest'
                 }
             }

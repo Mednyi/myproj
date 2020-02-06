@@ -1,0 +1,6 @@
+mkdir -p /home/alex/.ssh - флаг -p - создать все папки пути
+touch authorized_keys - создать файл, содержащий ssh ключи пользователя
+useradd -d /home/alex alex - добавляем пользователя alex с хомяком /home/alex
+cat /etc/group | grep docker - файл /etc/group - информация о группах доступа 
+chown -R alex:alex /home/alex/ - команда, устанавливающая права доступа к файлам и папкам -R - рекурсивно
+chmod 600 /home/alex/.ssh/authorized_keys - 700 = 111 000 000 ~ rwx --- ---

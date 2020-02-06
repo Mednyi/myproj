@@ -1,12 +1,14 @@
-pipeline {
+// Объявление pipeline
+pipeline { 
+    // Используем любой свободный Jenkins агент
     agent any
-    environment {
-        CI = 'true'
+    environment { // Переменные среды
+        CI = 'true' // Не требовать input от пользователя
     }
-    stages {
-            stage('Build') {
-                steps {
-                    sh 'docker build -t clinics:latest .'
+    stages { // Указываем набор этапов по deployment
+            stage('Build') { // Создаем этап с названием Build
+                steps { // Создаем шаги внутри этапа
+                    sh 'docker build -t clinics:latest .' // Вызов команды bash
                 }
             }
             stage('Test') {
@@ -15,8 +17,8 @@ pipeline {
                 }
             }
             stage('Deploy for Development') {
-                when {
-                    branch 'dev'
+                when { // Условный оператор
+                    branch 'dev'// Исполняется только для ветки dev
                 }
                 steps {
                     sh 'docker container stop clinics-dev'

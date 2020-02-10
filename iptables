@@ -35,3 +35,20 @@ ESTABLISHED - пакеты уже установленных соединени�
 
 iptables -A INPUT -i lo -j ACCEPT - принимать пакеты с интерфейса lo (localhost)
 iptables -A INPUT -m conntrack --ctstate INVALID -j DROP - блокировать плохие пакеты
+iptables -A INPUT -p 41 -j ACCEPT - обрабатывать пакеты INTERNET CONTROL MESSAGE PROTOCOL (ICMP) - ping, traceroute
+iptables -A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT - Принимать новые соединения только для ECHO запросов (ping)
+iptables -A INPUT -p udp -m conntrack --ctstate NEW -j UDP  - отправить все пакеты нового соединения по udp в цепь UDP
+iptables -A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP - отправить все пакеты нового соединения по tcp в цепь TCP
+iptables -A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable - в цепочке udp реджектить все пакеты с сообщением port unreachable
+iptables -A INPUT -p tcp -j REJECT --reject-with tcp-reset - в цепочке tcp реджектить все пакеты "connection reset"
+iptables -A INPUT -j REJECT --reject-with icmp-proto-unreachable - реджектим все пакеты, поступающие с использованием других транспортных протоколов с сообщением protocol unreachable
+iptables -A TCP -p tcp --dport ssh -j ACCEPT - добавляем в цепочку TCP правило для разрешения ssh пакетов
+
+порты 22 - ssh ; 80 - http ; 443 - https ; 53 - DNS ; 25 - mail SMTP
+
+iptables -A TCP -p tcp --dport http -j ACCEPT \
+iptables -A TCP -p tcp --dport https -j ACCEPT \
+iptables -A TCP -p tcp --dport 53 -j ACCEPT \
+iptables -A UDP -p udp --dport 53 -j ACCEPT
+
+

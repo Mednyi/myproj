@@ -1,0 +1,6 @@
+docker network ls - торазить список текущих сетей докера
+docker network inspect <имя network> - просмотреть информацию о network
+docker exec -it container1 ash[имя приложения] - запустить ash - терминал alpine linux
+docker attach <имя детаченного контейнера> - податтачить детаченый контейнер
+exit - выйти из консоли
+ip addr show - показать сетевые интерфейсы

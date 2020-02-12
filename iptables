@@ -51,4 +51,15 @@ iptables -A TCP -p tcp --dport https -j ACCEPT \
 iptables -A TCP -p tcp --dport 53 -j ACCEPT \
 iptables -A UDP -p udp --dport 53 -j ACCEPT
 
+--- Защита от спуфинга -----
+iptables -t raw -I PREROUTING -m rpfilter --invert -j DROP - запретить запросы, содержащие локальный адрес отправителя
+такие запросы обычно подразумевают spoofing
+--- Защита от сканирования SYN ----
+ iptables -I TCP -p tcp -m recent --update --rsource --seconds 60 --name TCP-PORTSCAN -j REJECT --reject-with tcp-reset
+ - отклонить пакет с сообщением connection reset если хост, отправляюший пакет находился в списке TCP-PORTSCAN в течение последних 60 секунд
+iptables -D INPUT -p tcp -j REJECT --reject-with tcp-reset
+iptables -A INPUT -p tcp -m recent --set --rsource --name TCP-PORTSCAN -j REJECT --reject-with tcp-reset
+- Добавлять хосты с реджектнутыми пакетами в список TCP-PORTSCAN
+
+--- Защита от сканирования по UDP ----
 

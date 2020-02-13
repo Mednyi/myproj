@@ -4,3 +4,18 @@ docker exec -it container1 ash[имя приложения] - запустить
 docker attach <имя детаченного контейнера> - податтачить детаченый контейнер
 exit - выйти из консоли
 ip addr show - показать сетевые интерфейсы
+
+//Create own docker network based on bridge driver
+
+docker network create -d bridge my-network - создать network на драйвере bridge с именем my-network
+docker network create -d <имя драйвера> <имя сети>
+
+docker network connect my-network cont5 - подключить контейнер cont5 к сети my-network
+docker network connect <имя сети> <имя контейнера>
+
+//-- Docker network based on host driver --//
+docker run --rm -d --network host --name webserver nginx - запустить nginx контейнер
+в сети на базе драйвера host
+
+//Docker network based on macvlan driver //
+docker network create -d macvlan --subnet 172.20.0.0/16 --gateway 172.20.0.1 -o parent=eth0 my-macvlan

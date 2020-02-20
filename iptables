@@ -61,5 +61,8 @@ iptables -D INPUT -p tcp -j REJECT --reject-with tcp-reset
 iptables -A INPUT -p tcp -m recent --set --rsource --name TCP-PORTSCAN -j REJECT --reject-with tcp-reset
 - Добавлять хосты с реджектнутыми пакетами в список TCP-PORTSCAN
 
---- Защита от сканирования по UDP ----
+--- Загрузка параметров iptables при перезапуске ----
+sudo iptables-restore /etc/iptables/rules.v4
 
+// Разрешить отправку пакетов на порт 7922(другой порт для ssh)
+iptables -A TCP -p tcp --dport 7922 -j ACCEPT

@@ -19,3 +19,9 @@ docker run --rm -d --network host --name webserver nginx - запустить ng
 
 //Docker network based on macvlan driver //
 docker network create -d macvlan --subnet 172.20.0.0/16 --gateway 172.20.0.1 -o parent=eth0 my-macvlan
+
+// Drop all connections to containers except your ip
+1. ifconfig - check network interfaces
+2. iptables -I DOCKER-USER -i <interface name> ! -s <ip address> -j DROP
+3. iptables -I DOCKER-USER -i eth0 -p tcp --dport 80 -j DROP // Drop all the connections to a specific port
+4. iptables -I DOCKER-USER -i eth0 -p tcp --dport 8080 ! -s 178.140.11.9 -j DROP // Drop all the connections to a specific port except specified ip address

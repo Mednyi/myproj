@@ -60,3 +60,16 @@ apt - advanced packaging tool
   --publish 3000:3000 docker:dind - Запуск контейнера с докером, который будет использован дженкинсом для исполнения команд докера
 5. docker container run --name myjenkins --rm --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --volume "$HOME":/home --publish 8080:8080 jenkinsci/blueocean
 
+-------------------------------------------------------------------------------------
+
+Настройка ssh порта
+
+vim[vi, nano] /etc/ssh/sshd_config 
+Раскоментировать
+Port <номер порта>
+
+Рестартовать сервис ssh(sshd for Fedora и CentOS)
+service ssh restart
+
+Коннект по другому порту:
+ssh <username>@<server ip> -p <port number>

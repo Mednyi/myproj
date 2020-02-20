@@ -1,0 +1,36 @@
+//------------------------ Installation ----------------------------------------------------------//
+
+Get the binary from repo and put it to /usr/local/bin so docker-compose command would be recognized and run the binary
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+Change docker-compose file permission to 'executable' so it may be executed
+sudo chmod +x /usr/local/bin/docker-compose
+
+Check if docker-compose command works (should show the version)
+docker-compose --version
+
+//---------------------------------------------------------------------------------//
+
+//---------------------------------PREPARE------------------------------------//
+
+1. В директории Вашего проекта создайте Dockerfile с инструкциями по сборке проекта
+2. Создайте файл docker-compose.yml
+Пример содержимого:
+version: '3'                - версия docker-compose
+services:                   - далее представлен список сервисов
+  api:                      - имя сервиса, далее описание сервиса
+      build: .              - директория с Dockerfile для сборки
+      ports:                - список связи портов
+       - "8080:3000"          
+  webserver:                - второй сервис в списке сервисов
+      image: "nginx:latest" - образ для контейнера
+      ports:                - список связи портов
+       - "8089:80"
+
+//-------------------------------------USE-----------------------------------------//
+
+docker-compose up -d - стартовать контейнеры с -d(detached mode)
+docker-compose down - остановить контейнеры
+docker-compose build - пересобрать все образы, требующие сборки (после изменений в коде)
+
+//---------------------------------------------------------------------------------//

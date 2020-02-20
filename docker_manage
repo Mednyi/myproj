@@ -1,0 +1,33 @@
+docker run -d -p 8081:80 --name server --restart [options] nginx - set restart option for specific container on start
+options :
+    no (default)
+    on-failure - If error occurs
+    always - always restart (In case if user has stopped the container himself then it will ber restarted on docker service start)
+    unless-stopped - Same as 'always' but container won't be restarted if it was stopped manually
+
+// Turn on live-restore //
+1. Create docker.json in /etc/docker/
+2. Add 
+{
+    "live-restore": true
+}
+
+// Memory(RAM) and CPU management //
+
+-m [--memory=] <value> <measurement>
+measurement: [
+    b - bytes
+    k - kilobytes
+    m - megabytes
+    g - gigabytes
+]
+ex: -m 10 b
+
+-cpus=<value> 
+value - how much CPUs
+
+// Show container logs //
+docker logs -f <container name> - follow the log
+docker logs -f <container name> --tail 10 - show last 10 lines of log and follow it
+docker logs <container> - show container logs
+
